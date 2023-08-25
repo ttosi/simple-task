@@ -1,7 +1,0 @@
-{
-  "name": "simple-task",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "vue-vite"
-}
