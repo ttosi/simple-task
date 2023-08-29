@@ -47,7 +47,7 @@
       </ion-modal>
       <ion-list class="m-2">
         <ion-item v-for="item in items" :key="item.name">
-          <div class="flex justify-between items-center px-4 w-full">
+          <div class="flex justify-between items-center px-4 w-full" @click="complete(item)">
             <div class="flex">
               <div v-if="item.recurring" class="mt-1 text-slate-500">
                 <mdicon name="refresh" size="16" />
@@ -57,7 +57,7 @@
               </div>
             </div>
             <div class="flex items-start">
-              <div class="mr-5"><ion-checkbox @ion-change="complete(item)" /></div>
+              <div class="mr-5"><ion-checkbox v-model="item.completed" /></div>
               <div>
                 <mdicon
                   name="trash-can-outline"
@@ -122,7 +122,6 @@ const deleteItem = (item: any) => {
 }
 
 const complete = (item: any) => {
-  console.log(item)
   item.completed = !item.completed
 }
 
