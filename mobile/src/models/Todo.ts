@@ -7,5 +7,6 @@ export class Todo extends Saveable {
   constructor(name: string) {
     super()
     this.name = name
+    this.completed = false
   }
 }

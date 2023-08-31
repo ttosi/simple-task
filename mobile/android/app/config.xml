@@ -1,0 +1,5 @@
+<widget id="app.tdc.simpletask" version="0.0.1" versionCode="1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Simple Task</name>
+    <description>An easy way to build grocery lists, manage todos, and track long term goals.</description>
+    <author email="ttosi519@gmail.com" href="https://tdc.app">Tony S. Tosi</author>
+</widget>
