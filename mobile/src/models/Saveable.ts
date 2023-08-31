@@ -1,11 +1,10 @@
-// import { Item } from './Item'
+import { IItem } from './IItem'
 
-// export abstract class Saveable implements Item {
-//   public name?: string
+export abstract class Saveable implements IItem {
+  public name: string | ''
+  public completed: boolean | false
 
-//   save(type: string): void {
-//     console.log(type)
-//   }
-// }
-
-// export { Saveable }
+  static save<T>(type: string, items: T[]): void {
+    localStorage.setItem(type, JSON.stringify(items))
+  }
+}

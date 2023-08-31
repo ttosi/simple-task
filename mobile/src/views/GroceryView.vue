@@ -6,7 +6,7 @@
           <ion-button id="open-modal" expand="block" class="-mr-3">
             <mdicon name="plus-circle-outline" />
           </ion-button>
-          <ion-button>
+          <ion-button @click="confirmReset">
             <mdicon name="refresh" />
           </ion-button>
         </ion-buttons>
@@ -20,9 +20,7 @@
           <ion-toolbar>
             <ion-title>Add Grocery</ion-title>
             <ion-buttons slot="end">
-              <ion-button class="text-green-600" :strong="true" @click="addItem()">
-                Confirm
-              </ion-button>
+              <ion-button class="text-green-600" :strong="true" @click="addItem()">Add</ion-button>
             </ion-buttons>
             <ion-buttons slot="end">
               <ion-button class="text-red-700" @click="cancel()">Cancel</ion-button>
@@ -45,43 +43,23 @@
           </div>
         </ion-content>
       </ion-modal>
-      <ion-list class="m-2">
-        <ion-item v-for="item in items" :key="item.name">
-          <div class="flex justify-between items-center px-4 w-full" @click="complete(item)">
-            <div class="flex">
-              <div v-if="item.recurring" class="mt-1 text-slate-500">
-                <mdicon name="refresh" size="16" />
-              </div>
-              <div class="ml-2 capitalize" :class="{ completed: item.completed }">
-                {{ item.name }}
-              </div>
-            </div>
-            <div class="flex items-start">
-              <div class="mr-5"><ion-checkbox v-model="item.completed" /></div>
-              <div>
-                <mdicon
-                  name="trash-can-outline"
-                  class="text-red-800"
-                  size="16"
-                  @click="deleteItem(item)" />
-              </div>
-            </div>
-          </div>
-        </ion-item>
-      </ion-list>
+      <item-list :items="items.filter((i) => i.recurring || !i.completed)" @remove="remove" />
+      <item-list :items="items.filter((i) => !i.recurring && i.completed)" @remove="remove" />
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
 import { Grocery } from '@/models/Grocery'
+// import ConfirmDialog from '@/components/ConfirmDialog.vue'
+import { showDialog } from '@/composables/confirmDialog'
+import ItemList from '@/components/ItemList.vue'
+import grocerySeed from '@/models/GrocerySeed.json'
 import {
   IonButton,
   IonButtons,
   IonModal,
-  IonList,
-  IonItem,
   IonPage,
   IonHeader,
   IonToolbar,
@@ -91,45 +69,68 @@ import {
   IonCheckbox,
 } from '@ionic/vue'
 
-const items: Grocery[] | undefined = reactive([
-  { id: 1, recurring: true, name: 'Apples', completed: false },
-  { id: 2, recurring: true, name: 'Bananas', completed: false },
-  { id: 3, recurring: true, name: 'Lettuce', completed: false },
-  { id: 4, recurring: true, name: 'Spinach', completed: false },
-  { id: 5, recurring: true, name: 'Strawberries', completed: false },
-  { id: 6, recurring: true, name: 'Sandwich Meat', completed: false },
-  { id: 7, recurring: true, name: 'Sliced Cheese', completed: false },
-  { id: 8, recurring: true, name: 'Orange Juice', completed: false },
-  { id: 9, recurring: true, name: 'Almond Milk', completed: false },
-  { id: 10, recurring: true, name: 'Milk', completed: false },
-  { id: 11, recurring: true, name: 'Bread', completed: false },
-])
-
+const items: Grocery[] | null = reactive([])
 const modal = ref()
 const item = ref(new Grocery('', false))
 
 const addItem = () => {
   if (item.value?.name) {
-    items.unshift(new Grocery(item.value.name, item.value.recurring as boolean))
+    items.push(new Grocery(item.value.name, item.value.recurring))
     item.value.name = ''
     item.value.recurring = false
   }
   modal.value.$el.dismiss()
 }
 
-const deleteItem = (item: any) => {
+const confirmReset = async () => {
+  const dialogCallBack = (response: boolean) => {
+    if (response) {
+      reset()
+    }
+  }
+
+  showDialog(
+    'Confirm Reset',
+    'Are you sure you want to reset the shopping list?',
+    'RESET',
+    dialogCallBack
+  )
+}
+
+const reset = () => {
+  // TODO: make not ugly
+  items.map((i) => {
+    if (i.recurring) {
+      i.completed = false
+    }
+
+    if (!i.recurring) {
+      i.completed = true
+    }
+  })
+}
+
+const remove = (item: Grocery) => {
   items.splice(items.indexOf(item), 1)
 }
 
-const complete = (item: any) => {
-  item.completed = !item.completed
-}
-
 const cancel = () => modal.value.$el.dismiss(null, 'cancel')
+
+watch(
+  items,
+  (changed) => {
+    Grocery.save('groceries', changed)
+  },
+  { deep: true }
+)
+
+onMounted(() => {
+  if (!localStorage.getItem('groceries')) {
+    localStorage.setItem('groceries', JSON.stringify(grocerySeed))
+  }
+
+  items.push(...(JSON.parse(localStorage.getItem('groceries') as any) as Grocery[]))
+})
 </script>
 
-<style scoped>
-.completed {
-  @apply line-through text-slate-500;
-}
-</style>
+<style scoped></style>

@@ -1,0 +1,62 @@
+[
+  {
+    "recurring": true,
+    "name": "Apples",
+    "completed": false
+  },
+  {
+    "recurring": true,
+    "name": "Bananas",
+    "completed": false
+  },
+  {
+    "recurring": true,
+    "name": "Lettuce",
+    "completed": false
+  },
+  {
+    "recurring": true,
+    "name": "Spinach",
+    "completed": false
+  },
+  {
+    "recurring": true,
+    "name": "Strawberries",
+    "completed": false
+  },
+  {
+    "recurring": true,
+    "name": "Sandwich Meat",
+    "completed": false
+  },
+  {
+    "recurring": true,
+    "name": "Sliced Cheese",
+    "completed": false
+  },
+  {
+    "recurring": true,
+    "name": "Almond Milk",
+    "completed": false
+  },
+  {
+    "recurring": true,
+    "name": "Milk",
+    "completed": false
+  },
+  {
+    "recurring": true,
+    "name": "Bread",
+    "completed": false
+  },
+  {
+    "recurring": true,
+    "name": "Almond Milk",
+    "completed": false
+  },
+  {
+    "recurring": true,
+    "name": "Milk",
+    "completed": false
+  }
+]
