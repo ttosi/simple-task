@@ -83,17 +83,13 @@ const addItem = () => {
 }
 
 const confirmReset = async () => {
-  const dialogCallBack = (response: boolean) => {
-    if (response) {
-      reset()
-    }
-  }
-
   showDialog(
     'Confirm Reset',
     'Are you sure you want to reset the shopping list?',
     'RESET',
-    dialogCallBack
+    (res: boolean) => {
+      if (res) reset()
+    }
   )
 }
 
