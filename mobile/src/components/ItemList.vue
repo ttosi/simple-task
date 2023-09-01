@@ -4,22 +4,10 @@
       <div class="flex justify-between items-center px-4 w-full">
         <div class="flex justify-between w-full">
           <div class="flex w-full" @click="item.completed = !item.completed">
-            <div v-if="item.recurring" class="mt-1 text-slate-500">
-              <mdicon name="refresh" size="16" />
-            </div>
-            <div class="flex-col" :class="{ completed: item.completed }">
-              <div class="ml-2" :class="{ left: !item.recurring }">
-                <div class="capitalize">
-                  {{ item.name }}
-                </div>
-                <div class="text-xs italic text-slate-400">
-                  {{ departments.find((d) => d.id === item.departmentId)?.name }}
-                </div>
-              </div>
-            </div>
+            <component :is="component" :item="item" />
           </div>
           <div class="flex items-center">
-            <div v-if="item.completed && !item.recurring" class="">
+            <div v-if="item.completed && !item.recurring">
               <mdicon
                 name="arrow-up-bold"
                 class="text-slate-400"
@@ -42,11 +30,9 @@
 <script setup lang="ts">
 import { showDialog } from '@/composables/confirmDialog'
 import { IonList, IonItem, IonCheckbox } from '@ionic/vue'
-import departments from '@/stores/departments.json'
 
+defineProps(['items', 'component'])
 const emit = defineEmits(['remove'])
-
-defineProps(['items'])
 
 const confirmRemove = async (item: any) => {
   showDialog(
@@ -55,7 +41,6 @@ const confirmRemove = async (item: any) => {
     'DELETE',
     (res: boolean) => {
       if (res) {
-        console.log(item)
         emit('remove', item)
       }
     }
@@ -63,7 +48,7 @@ const confirmRemove = async (item: any) => {
 }
 </script>
 
-<style scoped>
+<style>
 .completed {
   @apply line-through text-slate-500;
 }

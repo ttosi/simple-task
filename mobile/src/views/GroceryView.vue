@@ -23,7 +23,9 @@
               <ion-button class="text-green-600" :strong="true" @click="addItem()">Add</ion-button>
             </ion-buttons>
             <ion-buttons slot="end">
-              <ion-button class="text-red-700" @click="cancel()">Cancel</ion-button>
+              <ion-button class="text-red-700" @click="modal.value.$el.dismiss(null, 'cancel')">
+                Cancel
+              </ion-button>
             </ion-buttons>
           </ion-toolbar>
         </ion-header>
@@ -59,8 +61,14 @@
           </div>
         </ion-content>
       </ion-modal>
-      <item-list :items="sorted.filter((i) => i.recurring || !i.completed)" @remove="remove" />
-      <item-list :items="sorted.filter((i) => !i.recurring && i.completed)" @remove="remove" />
+      <item-list
+        :items="sorted.filter((i) => i.recurring || !i.completed)"
+        :component="GroceryItem"
+        @remove="remove" />
+      <item-list
+        :items="sorted.filter((i) => !i.recurring && i.completed)"
+        :component="GroceryItem"
+        @remove="remove" />
     </ion-content>
   </ion-page>
 </template>
@@ -68,12 +76,11 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref, watch, computed } from 'vue'
 import { Grocery } from '@/models/Grocery'
+import { GroceryItem } from '@/components'
 import { showDialog } from '@/composables/confirmDialog'
 import ItemList from '@/components/ItemList.vue'
-
 import departments from '@/stores/departments.json'
 import grocerySeed from '@/seeds/groceries.json'
-
 import {
   IonButton,
   IonButtons,
@@ -122,7 +129,6 @@ const confirmReset = async () => {
 }
 
 const reset = () => {
-  // TODO: make not ugly
   items.map((i) => {
     if (i.recurring) {
       i.completed = false
@@ -135,11 +141,8 @@ const reset = () => {
 }
 
 const remove = (item: Grocery) => {
-  console.log('---->>', item)
   items.splice(items.indexOf(item), 1)
 }
-
-const cancel = () => modal.value.$el.dismiss(null, 'cancel')
 
 watch(
   items,
