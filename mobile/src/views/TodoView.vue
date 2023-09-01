@@ -18,12 +18,5 @@
 
 <script setup lang="ts">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue'
-import { Todo } from '@/models/Todo'
-
-const t = new Todo('todo one')
-// t.completed = false
-// t.createdDate = new Date()
-// t.completedDate = new Date()
-
-console.log(t)
+// import { Todo } from '@/models/Todo'
 </script>

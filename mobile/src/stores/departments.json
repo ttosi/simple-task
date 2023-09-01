@@ -1,0 +1,9 @@
+[
+  { "id": 1, "sequence": 1, "name": "Bakery" },
+  { "id": 2, "sequence": 2, "name": "Produce" },
+  { "id": 3, "sequence": 3, "name": "Deli" },
+  { "id": 4, "sequence": 4, "name": "Dairy" },
+  { "id": 5, "sequence": 5, "name": "Meats" },
+  { "id": 6, "sequence": 7, "name": "Grocery" },
+  { "id": 7, "sequence": 8, "name": "Misc" }
+]

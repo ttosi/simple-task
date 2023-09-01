@@ -28,34 +28,52 @@
           </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">
-          <div class="p-4 border-t flex items-center">
-            <div class="mr-3">
+          <div class="p-4 border-t">
+            <div class="">
               <ion-input
                 v-model="item.name"
                 label="Grocery Item"
                 label-placement="floating"
                 fill="outline"
-                placeholder="Enter Item" />
+                placeholder="Enter Item"
+                :counter="true"
+                :maxlength="25" />
             </div>
-            <div>
+            <div class="mb-5">
+              <ion-select
+                v-model="item.departmentId"
+                label="Select Department"
+                fill="outline"
+                :value="0">
+                <ion-select-option
+                  v-for="department in departments"
+                  :key="department.id"
+                  :value="department.id">
+                  {{ department.name }}
+                </ion-select-option>
+              </ion-select>
+            </div>
+            <div class="ml-1">
               <ion-checkbox v-model="item.recurring" labelPlacement="end">Recurring</ion-checkbox>
             </div>
           </div>
         </ion-content>
       </ion-modal>
-      <item-list :items="items.filter((i) => i.recurring || !i.completed)" @remove="remove" />
-      <item-list :items="items.filter((i) => !i.recurring && i.completed)" @remove="remove" />
+      <item-list :items="sorted.filter((i) => i.recurring || !i.completed)" @remove="remove" />
+      <item-list :items="sorted.filter((i) => !i.recurring && i.completed)" @remove="remove" />
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref, watch } from 'vue'
+import { onMounted, reactive, ref, watch, computed } from 'vue'
 import { Grocery } from '@/models/Grocery'
-// import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import { showDialog } from '@/composables/confirmDialog'
 import ItemList from '@/components/ItemList.vue'
-import grocerySeed from '@/models/GrocerySeed.json'
+
+import departments from '@/stores/departments.json'
+import grocerySeed from '@/seeds/groceries.json'
+
 import {
   IonButton,
   IonButtons,
@@ -67,16 +85,26 @@ import {
   IonContent,
   IonInput,
   IonCheckbox,
+  IonSelect,
+  IonSelectOption,
 } from '@ionic/vue'
 
 const items: Grocery[] | null = reactive([])
 const modal = ref()
-const item = ref(new Grocery('', false))
+const item = ref(new Grocery('', 0, false))
+
+const sorted = computed(() => {
+  return items
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .sort((a, b) => a.departmentId - b.departmentId)
+})
 
 const addItem = () => {
   if (item.value?.name) {
-    items.push(new Grocery(item.value.name, item.value.recurring))
+    items.push(new Grocery(item.value.name, item.value.departmentId, item.value.recurring))
+
     item.value.name = ''
+    item.value.departmentId = 0
     item.value.recurring = false
   }
   modal.value.$el.dismiss()
@@ -107,6 +135,7 @@ const reset = () => {
 }
 
 const remove = (item: Grocery) => {
+  console.log('---->>', item)
   items.splice(items.indexOf(item), 1)
 }
 
