@@ -20,17 +20,15 @@
           <ion-toolbar>
             <ion-title>Add Grocery</ion-title>
             <ion-buttons slot="end">
-              <ion-button class="text-green-600" :strong="true" @click="addItem()">Add</ion-button>
+              <ion-button class="text-green-500" @click="addItem()">Add</ion-button>
             </ion-buttons>
             <ion-buttons slot="end">
-              <ion-button class="text-red-700" @click="modal.value.$el.dismiss(null, 'cancel')">
-                Cancel
-              </ion-button>
+              <ion-button class="text-red-700" @click="cancel()">Cancel</ion-button>
             </ion-buttons>
           </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">
-          <div class="p-4 border-t">
+          <div class="p-4">
             <div class="">
               <ion-input
                 v-model="item.name"
@@ -143,6 +141,8 @@ const reset = () => {
 const remove = (item: Grocery) => {
   items.splice(items.indexOf(item), 1)
 }
+
+const cancel = () => modal.value.$el.dismiss(null, 'cancel')
 
 watch(
   items,
