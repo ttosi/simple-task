@@ -1,9 +1,0 @@
-{
-  "bracketSameLine": true,
-  "htmlWhitespaceSensitivity": "ignore",
-  "singleQuote": true,
-  "trailingComma": "es5",
-  "tabwidth": 2,
-  "semi": true,
-  "printWidth": 100
-}
