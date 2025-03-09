@@ -9,6 +9,5 @@ export class Grocery extends Saveable {
     this.name = name
     this.departmentId = departmentId
     this.recurring = recurring
-    this.completed = false
   }
 }

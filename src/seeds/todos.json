@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "title": "Todo One",
+    "todoItems": [
+      { "name": "todo item one", "completed": false },
+      { "name": "todo item two", "completed": false },
+      { "name": "todo item three", "completed": false },
+      { "name": "todo item four", "completed": false }
+    ]
+  },
+  {
+    "title": "Todo Two",
+    "todoItems": [
+      { "name": "todo item one", "completed": false },
+      { "name": "todo item two", "completed": false },
+      { "name": "todo item three", "completed": false }
+    ]
+  },
+  {
+    "title": "Todo Three",
+    "todoItems": [{ "name": "todo item one", "completed": false }]
+  }
+]

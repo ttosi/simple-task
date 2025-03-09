@@ -1,8 +1,9 @@
-import { IItem } from './IItem'
+import { Item } from './Item'
 
-export abstract class Saveable implements IItem {
+export abstract class Saveable implements Item {
   public name: string
-  public completed: boolean
+  public completed: boolean = false
+  public created: Date = new Date()
 
   static save<T>(type: string, items: T[]): void {
     localStorage.setItem(type, JSON.stringify(items))
