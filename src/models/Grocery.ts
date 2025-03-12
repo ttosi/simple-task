@@ -5,8 +5,7 @@ export class Grocery extends Saveable {
   public recurring: boolean
 
   constructor(name: string, departmentId: number = 1, recurring: boolean = false) {
-    super()
-    this.name = name
+    super(name)
     this.departmentId = departmentId
     this.recurring = recurring
   }

@@ -14,7 +14,6 @@
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense"></ion-header>
       <ion-modal ref="modal" trigger="open-modal">
         <ion-header>
           <ion-toolbar>
@@ -156,7 +155,6 @@ onMounted(() => {
   if (!localStorage.getItem('groceries')) {
     localStorage.setItem('groceries', JSON.stringify(grocerySeed))
   }
-
   items.push(...(JSON.parse(localStorage.getItem('groceries') as any) as Grocery[]))
 })
 </script>
