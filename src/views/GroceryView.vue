@@ -3,23 +3,26 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="primary" class="mr-2 flex">
-          <ion-button id="open-modal" expand="block" class="-mr-3">
+          <ion-button id="modal-add-grocery" expand="block" class="-mr-3">
             <mdicon name="plus-circle-outline" />
           </ion-button>
           <ion-button @click="confirmReset">
             <mdicon name="refresh" />
+          </ion-button>
+          <ion-button @click="confirmReset">
+            <mdicon name="tune-variant" />
           </ion-button>
         </ion-buttons>
         <ion-title>Groceries</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
-      <ion-modal ref="modal" trigger="open-modal">
+      <ion-modal ref="groceryModal" trigger="modal-add-grocery">
         <ion-header>
           <ion-toolbar>
             <ion-title>Add Grocery</ion-title>
             <ion-buttons slot="end">
-              <ion-button class="text-green-500" @click="addItem()">Add</ion-button>
+              <ion-button class="text-green-500" @click="addItem()">Save</ion-button>
             </ion-buttons>
             <ion-buttons slot="end">
               <ion-button class="text-red-700" @click="cancel()">Cancel</ion-button>
@@ -28,10 +31,10 @@
         </ion-header>
         <ion-content class="ion-padding">
           <div class="p-4">
-            <div class="">
+            <div>
               <ion-input
-                v-model="item.name"
-                label="Grocery Item"
+                v-model="grocery.name"
+                label="Item"
                 label-placement="floating"
                 fill="outline"
                 placeholder="Enter Item"
@@ -40,7 +43,8 @@
             </div>
             <div class="mb-5">
               <ion-select
-                v-model="item.departmentId"
+                v-model="grocery.departmentId"
+                interface="action-sheet"
                 label="Select Department"
                 fill="outline"
                 :value="0">
@@ -53,7 +57,9 @@
               </ion-select>
             </div>
             <div class="ml-1">
-              <ion-checkbox v-model="item.recurring" labelPlacement="end">Recurring</ion-checkbox>
+              <ion-checkbox v-model="grocery.recurring" labelPlacement="end">
+                Recurring
+              </ion-checkbox>
             </div>
           </div>
         </ion-content>
@@ -75,8 +81,8 @@ import { onMounted, reactive, ref, watch, computed } from 'vue'
 import { Grocery } from '@/models/Grocery'
 import { GroceryItem } from '@/components'
 import { showDialog } from '@/composables/confirmDialog'
-import ItemList from '@/components/ItemList.vue'
-import departments from '@/stores/departments.json'
+import ItemList from '@/components/GroceryItems.vue'
+import departments from '@/seeds/departments.json'
 import grocerySeed from '@/seeds/groceries.json'
 import {
   IonButton,
@@ -93,25 +99,27 @@ import {
   IonSelectOption,
 } from '@ionic/vue'
 
-const items: Grocery[] | null = reactive([])
-const modal = ref()
-const item = ref(new Grocery('', 0, false))
+const groceries: Grocery[] | null = reactive([])
+const groceryModal = ref()
+const grocery = ref(new Grocery('', 0, false))
 
 const sorted = computed(() => {
-  return items
+  return groceries
     .sort((a, b) => a.name.localeCompare(b.name))
     .sort((a, b) => a.departmentId - b.departmentId)
 })
 
 const addItem = () => {
-  if (item.value?.name) {
-    items.push(new Grocery(item.value.name, item.value.departmentId, item.value.recurring))
+  if (grocery.value?.name) {
+    groceries.push(
+      new Grocery(grocery.value.name, grocery.value.departmentId, grocery.value.recurring)
+    )
 
-    item.value.name = ''
-    item.value.departmentId = 0
-    item.value.recurring = false
+    grocery.value.name = ''
+    grocery.value.departmentId = 0
+    grocery.value.recurring = false
   }
-  modal.value.$el.dismiss()
+  groceryModal.value.$el.dismiss()
 }
 
 const confirmReset = async () => {
@@ -126,7 +134,7 @@ const confirmReset = async () => {
 }
 
 const reset = () => {
-  items.map((i) => {
+  groceries.map((i) => {
     if (i.recurring) {
       i.completed = false
     }
@@ -138,13 +146,13 @@ const reset = () => {
 }
 
 const remove = (item: Grocery) => {
-  items.splice(items.indexOf(item), 1)
+  groceries.splice(groceries.indexOf(item), 1)
 }
 
-const cancel = () => modal.value.$el.dismiss(null, 'cancel')
+const cancel = () => groceryModal.value.$el.dismiss(null, 'cancel')
 
 watch(
-  items,
+  groceries,
   (changed) => {
     Grocery.save('groceries', changed)
   },
@@ -155,7 +163,7 @@ onMounted(() => {
   if (!localStorage.getItem('groceries')) {
     localStorage.setItem('groceries', JSON.stringify(grocerySeed))
   }
-  items.push(...(JSON.parse(localStorage.getItem('groceries') as any) as Grocery[]))
+  groceries.push(...(JSON.parse(localStorage.getItem('groceries') as any) as Grocery[]))
 })
 </script>
 

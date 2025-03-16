@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import departments from '@/stores/departments.json'
+import departments from '@/seeds/departments.json'
 
 defineProps(['item'])
 </script>

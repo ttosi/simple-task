@@ -20,8 +20,12 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/GroceryView.vue'),
       },
       {
-        path: 'todos',
-        component: () => import('@/views/TodoView.vue'),
+        path: 'lists',
+        component: () => import('@/views/ListsView.vue'),
+      },
+      {
+        path: 'notes',
+        component: () => import('@/views/NotesView.vue'),
       },
       {
         path: 'goals',
